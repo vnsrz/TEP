@@ -41,18 +41,17 @@ typedef struct DSU{
 ll kruskal(int N, vector<edge>& es) {
     sort(es.begin(), es.end());
 
-    set<int> visited;
+    int count = 0;
     ll cost = 0;
     DSU dsu(N);
 
     for (auto [w, u, v] : es)
         if (dsu.unite(u, v)){
-            visited.emplace(u);
-            visited.emplace(v);
+            count++;
             cost += w;
         }
-    if ((int)visited.size() != N) return -1;
-    return cost;
+    if (count == N-1) return cost;
+    return -1;
 }
 
 string solve(vector<edge> &adj, int n) {
