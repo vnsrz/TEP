@@ -1,11 +1,11 @@
-// Road reparation
+// Chefland and electricity
 #include <bits/stdc++.h>
 
 using namespace std;
 using ll = long long;
 using ii = pair <int, int>;
-using graph = vector<vector<ii>>;
 using edge = tuple<ll, ll, ll>;
+using graph = vector<edge>;
 
 typedef struct DSU{
     vector<int> parent;
@@ -38,44 +38,53 @@ typedef struct DSU{
     }
 }DSU;
 
-ll kruskal(int N, vector<edge>& es) {
+int kruskal(int N, vector<edge> &es) {
     sort(es.begin(), es.end());
 
-    int count = 0;
-    ll cost = 0;
+    int cost = 0;
     DSU dsu(N);
 
     for (auto [w, u, v] : es)
-        if (dsu.unite(u, v)){
-            count++;
+        if (dsu.unite(u, v))
             cost += w;
-        }
-    if (count == N-1) return cost;
-    return -1;
+
+    return cost;
 }
 
-string solve(vector<edge> &adj, int n) {
-    ll cost = kruskal(n, adj);
-    if (cost == -1) return "IMPOSSIBLE";
-    return to_string(cost);
+void solve(int n) {
+    //vector<int> hasElectricity(n+1, 0);
+    vector<int> position(n+1);
+    string villages;
+    graph adj;
+
+    cin >> villages;
+
+    for (int i=1; i<n; ++i) {
+        int w = position[i+1] - position[i];
+        adj.push_back(make_tuple(w, i, i+1));
+    }
+
+    for (int i=1; i<n+1; ++i) {
+        cin >> position[i];
+        //if(villages[i-1]) hasElectricity[i] = 1;
+    }
+
+    cout << kruskal(n, adj) << endl;
+    // for (auto [w, u, v] : adj)
+    //     cout << u << " " << v << " " << w << endl;
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     
-    int n, m;
-    cin >> n >> m;
-    vector<edge> adj(m*2);
+    int t, n;
+    cin >> t;
 
-    for (int i=0; i<m; ++i) {
-        ll x, y, w;
-        cin >> x >> y >> w;
-        adj.push_back(make_tuple(w, x, y));
-        adj.push_back(make_tuple(w, y, x));   
+    for (int i=0; i<t; ++i) {
+        cin >> n;
+        solve(n);
     }
-
-    cout << solve(adj, n) << endl;
 
     return 0;
 }
